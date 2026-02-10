@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Today's Leaderboard</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .leaderboard-container {
+        max-width: 600px;
+        margin: auto;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .card {
+        background: #7c6eff;
+        color: white;
+        border-radius: 12px;
+        padding: 15px 20px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: background 0.3s;
+    }
+
+    .card:hover {
+        background: #695de6;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-details {
+        display: none;
+        margin-top: 10px;
+        background: rgba(255,255,255,0.15);
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .card-details p {
+        margin: 5px 0;
+    }
+</style>
+</head>
+<body>
+
+<div class="leaderboard-container">
+    <div class="header">
+        <span>📊 Today's Leaderboard</span>
+        <span id="summary">Total Sales: 0 | Total Amount: Rs. 0.00</span>
+    </div>
+
+    <div id="leaderboard-cards"></div>
+</div>
+
+<script>
+const container = document.getElementById('leaderboard-cards');
+const summary = document.getElementById('summary');
+
+async function fetchLeaderboard() {
+    const resp = await fetch('/api/leaderboard/');
+    const data = await resp.json();
+    const results = data.results || [];
+
+    let totalSales = 0;
+    let totalAmount = 0;
+    container.innerHTML = '';
+
+    results.forEach(item => {
+        totalSales += item.total_deals;
+        totalAmount += parseFloat(item.total_sales_amount);
+
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        // Build individual sales details
+        let salesHtml = '';
+        if(item.sales && item.sales.length > 0){
+            salesHtml = '<ul>';
+            item.sales.forEach(sale => {
+                salesHtml += `<li>💰 Rs. ${sale.sale_amount.toFixed(2)} | 📦 ${sale.deals_count} deals | 🕒 ${new Date(sale.created_at).toLocaleString()}</li>`;
+            });
+            salesHtml += '</ul>';
+        } else {
+            salesHtml = '<p>No sales yet</p>';
+        }
+
+        card.innerHTML = `
+            <div class="card-header">
+                <span>#${item.rank} ${item.agent_name}</span>
+                <span>▼</span>
+            </div>
+            <div class="card-details">
+                <p>💰 Total: Rs. ${item.total_sales_amount.toFixed(2)}</p>
+                <p>📦 Total Deals: ${item.total_deals}</p>
+                <div class="sales-list">
+                    ${salesHtml}
+                </div>
+            </div>
+        `;
+
+        card.querySelector('.card-header').addEventListener('click', () => {
+            const details = card.querySelector('.card-details');
+            details.style.display = details.style.display === 'block' ? 'none' : 'block';
+        });
+
+        container.appendChild(card);
+    });
+
+    summary.textContent = `Total Sales: ${totalSales} | Total Amount: Rs. ${totalAmount.toFixed(2)}`;
+}
+
+fetchLeaderboard();
+</script>

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="wrap">
+
+    <div class="topbar">
+        <h2>Today's Leaderboard</h2>
+        <div class="right">
+            <span>
+                Total Sales : {{ total_deal_count }} 
+                    |
+                Total Amount : Rs. {{ total_sales_amount }}
+            </span>
+        </div>
+    </div>
+
+    {% for sale in sales %}
+    <div class="card">
+
+        <div class="card-head">
+            <div class="rank">#{{ forloop.counter }}</div>
+            <div class="name">{{ sale.agent_name }}</div>
+            <div class="actions">
+                <a href="{% url 'sale-edit' sale.id %}">Edit</a>
+                <a href="{% url 'sale-delete' sale.id %}">Delete</a>
+            </div>
+        </div>
+
+        <div class="meta">
+            {{ sale.deals_count }} sales |
+            Rs. {{ sale.sales_amount }}
+        </div>
+
+    </div>
+    {% empty %}
+        <p>No sales yet</p>
+    {% endfor %}
+
+    <div class="right"> 
+        <a class="add-btn" href="{% url 'sale-add' %}">Add Sale</a> 
+    </div>
+</div>
+
+{% endblock %}

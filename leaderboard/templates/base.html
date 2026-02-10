@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sales Leaderboard</title>
+<style>
+    .wrap{
+        width:700px;
+        margin:40px auto;
+        font-family:system-ui;
+    }
+
+    .topbar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+    }
+
+    .card{
+        background:linear-gradient(135deg,#8b7cf6,#6f8df7);
+        color:#fff;
+        padding:18px;
+        border-radius:12px;
+        margin-bottom:14px;
+    }
+
+    .card-head{
+        display:flex;
+        align-items:center;
+    }
+
+    .rank{
+        font-weight:700;
+        margin-right:10px;
+    }
+
+    .name{
+        font-weight:600;
+        flex:1;
+    }
+
+    .actions a{
+        color:#fff;
+        margin-left:12px;
+        font-size:14px;
+    }
+
+    .meta{
+        margin-top:6px;
+        font-size:14px;
+        opacity:.9;
+    }
+
+    .right {
+        text-align: right;        
+        margin: 20px 0;           
+    }
+
+    .add-btn {
+        display: inline-block;
+        background-color: #1616d6; 
+        color: white;            
+        padding: 10px 20px;       
+        text-decoration: none;    
+        border-radius: 5px;       
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .add-btn:hover {
+        background-color: #c02a2a; 
+    }
+
+</style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>
+    
